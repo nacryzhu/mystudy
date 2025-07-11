@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动物传染病与寄生虫学习题库</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .category-nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .category-btn {
+            padding: 12px 20px;
+            background: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .category-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .category-btn.active {
+            color: white;
+        }
+        
+        .category-btn.swine { background: #ff6b6b; }
+        .category-btn.swine.active, .category-btn.swine:hover { background: #ff5252; }
+        
+        .category-btn.poultry { background: #4ecdc4; }
+        .category-btn.poultry.active, .category-btn.poultry:hover { background: #3bc4bb; }
+        
+        .category-btn.ruminant { background: #ffd166; }
+        .category-btn.ruminant.active, .category-btn.ruminant:hover { background: #ffca52; }
+        
+        .category-btn.parasite { background: #a0c4ff; }
+        .category-btn.parasite.active, .category-btn.parasite:hover { background: #8fb8ff; }
+        
+        .category-btn.zoonosis { background: #ff9f7f; }
+        .category-btn.zoonosis.active, .category-btn.zoonosis:hover { background: #ff8f6a; }
+        
+        .category-btn.general { background: #bdb2ff; }
+        .category-btn.general.active, .category-btn.general:hover { background: #ab9eff; }
+        
+        .questions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .question-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .question-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .question-id {
+            background: #4a6572;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .question-category {
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: white;
+        }
+        
+        .question-text {
+            padding: 20px;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            flex-grow: 1;
+        }
+        
+        .answer-container {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        
+        .answer-container.show {
+            padding: 0 20px 20px;
+            max-height: 1000px;
+        }
+        
+        .answer-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .answer-content {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4a6572;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        
+        .toggle-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #4a6572;
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-align: center;
+        }
+        
+        .toggle-btn:hover {
+            background: #3a5460;
+        }
+        
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            color: #6c757d;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .questions-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-book-medical"></i> 动物传染病与寄生虫学习题库</h1>
+            <p class="subtitle">涵盖猪、禽、牛羊等动物主要传染病与寄生虫病知识，助力兽医专业学习</p>
+            <div class="stats">
+                <div class="stat-box"><i class="fas fa-paw"></i> 64道精选题目</div>
+                <div class="stat-box"><i class="fas fa-layer-group"></i> 6大知识分类</div>
+                <div class="stat-box"><i class="fas fa-graduation-cap"></i> 系统化学习</div>
+            </div>
+        </header>
+        
+        <div class="category-nav">
+            <button class="category-btn active" data-category="all">
+                <i class="fas fa-list"></i> 全部题目
+            </button>
+            <button class="category-btn swine" data-category="swine">
+                <i class="fas fa-piggy-bank"></i> 猪传染病
+            </button>
+            <button class="category-btn poultry" data-category="poultry">
+                <i class="fas fa-kiwi-bird"></i> 禽传染病
+            </button>
+            <button class="category-btn ruminant" data-category="ruminant">
+                <i class="fas fa-cow"></i> 牛羊传染病
+            </button>
+            <button class="category-btn parasite" data-category="parasite">
+                <i class="fas fa-bug"></i> 寄生虫病
+            </button>
+            <button class="category-btn zoonosis" data-category="zoonosis">
+                <i class="fas fa-user-md"></i> 人畜共患病
+            </button>
+            <button class="category-btn general" data-category="general">
+                <i class="fas fa-book"></i> 通用知识
+            </button>
+        </div>
+        
+        <div class="questions-container" id="questions-container">
+            <!-- 题目卡片将通过JavaScript动态生成 -->
+        </div>
+        
+        <footer>
+            <p>动物医学学习资料库 &copy; 2023 | 系统化学习动物传染病与寄生虫学</p>
+        </footer>
+    </div>
+
+    <script>
+        // 完整的题库数据
+        const questionBank = [
+            {
+                id: 40,
+                category: "swine",
+                question: "简述猪伪狂犬病临床诊断要点（流行病学、典型症状、典型病变）",
+                answer: "是由伪狂犬病病毒（PRV）引起的一种急性传染病。<br>（1）猪和多种动物均易感；除成年猪外，其他动物感染均是死亡；患病动物和带毒动物是主要传染源；本病可通过消化道、呼吸道、垂直感染等多种途径传播；<br>（2）新生仔猪表现高热、呕吐、腹泻和神经症状；大猪多为隐性感染，也可出现发热和呼吸系统症状；怀孕母猪主要出现流产和死胎。<br>（3）主要病变包括肾脏有针尖状出血点、脑膜充血、水肿、肺水肿和出血、胃肠道膜出血或卡他性炎症、扁桃体、肝和脾有白色散在坏死点。"
+            },
+            {
+                id: 41,
+                category: "swine",
+                question: "请列举 3 种可引起猪腹泻的病毒病，并概述其特征。",
+                answer: "猪传染性胃肠炎、猪流行性腹泻、猪轮状病毒。<br>猪流行性腹泻 (PED) 是由猪流行性腹泻病毒引起的猪的一种急性高度接触性肠道传染病，以呕吐、水样腹泻、脱水和哺乳仔猪高死亡率为主要特征，各年龄的猪均易感，但哺乳仔猪最严重。<br>猪传染性胃肠炎和猪轮状病毒的临床症状和病变与 PED 比较相似。均主要表现为呕吐、腹泻和脱水等症状。"
+            },
+            {
+                id: 42,
+                category: "poultry",
+                question: "简述传染性法氏囊病的特征性病理变化。",
+                answer: "法氏囊肿大和出血；肾脏肿大，内有尿酸盐沉积，\"花斑肾\"；腿部和胸部肌肉出血；腺胃和肌胃交界处条状出血。"
+            },
+            {
+                id: 43,
+                category: "poultry",
+                question: "某规模化鸭场 9 日龄雏鸭发生鸭病毒性肝炎疫情，应采取的具体措施有哪些？",
+                answer: "（1）隔离病鸭。<br>（2）病死鸭深埋或焚烧等无害化处理。<br>（3）采用鸭肝炎高免卵黄抗体进行治疗。<br>（4）辅之以抗菌药物；投喂多维，3 - 5d。<br>（5）每天对鸭场彻底消毒、带鸭消毒。"
+            },
+            {
+                id: 44,
+                category: "poultry",
+                question: "从临床表现和实验室确诊方法的角度简述马立克病的诊断要点。",
+                answer: "（1）临床表现：皮肤型、神经型、内脏型、眼型。<br>（2）实验室确诊：对肿瘤做组织学检查或免疫组化；病原分离；PCR 检测；荧光抗体技术、琼脂扩散试验和 ELISA。"
+            },
+            {
+                id: 45,
+                category: "poultry",
+                question: "某规模化鸭场 14 日龄雏鸭发生鸭传染性浆膜炎疫情，应采取的具体措施有哪些？",
+                answer: "（1）隔离病鸭。<br>（2）病死鸭深埋或焚烧等无害化处理。<br>（3）采用敏感抗菌药物如氟苯尼考等进行治疗。<br>（4）投喂多维等抗应激药物。<br>（5）每天对鸭场彻底消毒、带鸭消毒。"
+            },
+            {
+                id: 46,
+                category: "ruminant",
+                question: "牛病毒性腹泻 - 黏膜病的主要临床症状是什么？",
+                answer: "主要表现为发病突然，重度腹泻、脱水、白细胞减少、厌食、大量流涎、流泪、口腔粘膜糜烂和溃疡，并可在发病后几天内死亡。慢性病例表现为间歇性腹泻，并表现出里急后重，后期便中带血并有大量的粘膜；病牛重度脱水，体重减轻，可在发病几周或数月后死亡。"
+            },
+            {
+                id: 47,
+                category: "parasite",
+                question: "简述寄生虫病的流行特点。",
+                answer: "（1）地方性，指某种疾病在某一地区经常发生，无需自外地输入，这种情况称为地方性；<br>（2）季节性，寄生虫病的流行往往具有明显的季节性或有季节性差异；<br>（3）散发性，动物寄生虫病大多呈散发性流行，而且常呈慢性经过，病程长；<br>（4）自然疫源性，有些寄生虫既可以寄生于家养动物，又可寄生于野生脊椎动物，在未开发的原始森林或荒漠地区，这些寄生虫就在野生动物之间循环，家畜只要进入这种地区就可获得感染，这种地区常称为原发性自然疫源地。"
+            },
+            {
+                id: 48,
+                category: "ruminant",
+                question: "小反刍兽疫常见的病理变化有哪些？",
+                answer: "口腔和鼻腔黏膜糜烂坏死；支气管肺炎，肺尖肺炎；可见坏死性或出血性肠炎，盲肠、结肠近端和直肠出现特征性条状充血、出血，呈斑马状条纹；可见淋巴结特别是肠系膜淋巴结水肿，脾脏肿大并可出现坏死病变；组织学上可见肺部组织出现多核巨细胞以及细胞内嗜酸性包含体。"
+            },
+            {
+                id: 49,
+                category: "parasite",
+                question: "简述寄生虫对宿主的危害。",
+                answer: "（1）夺取宿主的营养，包括直接摄取宿主肠道中的营养物质、吸取宿主的血液和消化吞食宿主的组织细胞；<br>（2）机械性损伤，包括损伤宿主的组织器官、赌塞宿主的腔道和压迫组织器官；<br>（3）毒素作用，包括直接的毒害作用和引起变态反应；<br>（4）引入其他病原体。"
+            },
+            {
+                id: 50,
+                category: "swine",
+                question: "简述非洲猪瘟的临床诊断要点（流典型症状、典型病变）",
+                answer: "是由非洲猪瘟病毒引起的猪的一种急性、热性、高度接触性传染病。<br>（1）病猪和带毒猪是主要传染源、猪和野猪均易感、病毒可经多种途径接触传播；<br>（2）包括最急需、急性、亚急性和慢性等类型；急性型症状最典型，主要表现为高热、皮肤发绀、腹泻、流产等多种症状；<br>（3）典型病变是全身内脏器官广泛出血、高病死率为主要特征，其中脾脏异常肿大具有鉴别诊断意义。"
+            },
+            {
+                id: 51,
+                category: "zoonosis",
+                question: "试述沙门菌病的公共卫生意义。",
+                answer: "沙门菌病是公共卫生学上具有重要意义的人兽共患病之一，其病原沙门菌为肠杆菌科细菌。沙门菌主要分布在动物肠道内，菌型繁多，对人类和动物均有致病性。沙门菌感染是我国和世界各地常见的食源性疾病，主要引起食物中毒和胃肠炎。沙门菌主要经消化道途径传播，而一般容易受污染的食品主要是动物性食品，如牛肉、禽肉、牛奶、鸡蛋及其制品，食品也可能被已感染沙门氏菌的食品加工人员污染。沙门菌感染的临床症状主要表现为腹泻、发热、腹痛、呕吐，一般可持续 4 - 6 天，大多数人不需要使用抗生素就可以痊愈，但少数患者的病情会发展得比较严重，如小孩、孕妇、老人和免疫功能低下者。"
+            },
+            {
+                id: 52,
+                category: "general",
+                question: "简述传染病流行的 \"三环节\" 的核心要点。",
+                answer: "传染病从个体感染发病到群体感染发病，必须具备三个相互联系的条件，即传染源、传播途径和易感动物。传染源指有某病原体在其中寄居、生长、繁殖，并能排出体外的活的动物机体。传播途径指病原体由传染源排出后，经一定方式再侵入其他动物机体所经历的路径。易感动物指对某病原体缺乏免疫力容易受其感染的动物群体。"
+            },
+            {
+                id: 53,
+                category: "zoonosis",
+                question: "为什么因炭疽病死亡的动物尸体不能解剖？发生炭疽病后如何处理？",
+                answer: "炭疽死亡的动物尸体不能解剖是因为：<br>（1）炭疽是各种家畜、野生动物共患的一种人畜共患传染病，人可经皮肤局部感染而造成死亡。<br>（2）病死畜体内及其排泄物常含有大量菌体，当尸体处理不当，形成大量有强大生命力的芽孢污染土壤、水源、牧地等则可成为长久的疫源地。<br>处理措施：当病畜诊断确定为炭疽后，应立即上报疫情，划定疫区，封锁发病场所，实施一系列防疫措施。病畜隔离治疗，可疑畜用药物防治，假定健康群应紧急免疫接种。"
+            },
+            {
+                id: 54,
+                category: "zoonosis",
+                question: "人被犬咬伤后应该采取什么措施来防止狂犬病的发生？",
+                answer: "（1）伤口处理，尽快挤出伤口的血液，不能用嘴吸；<br>（2）用 20% 肥皂水或大量清水冲洗；<br>（3）5% 碘酊烧灼伤口；<br>（4）疫苗接种；<br>（5）如果伤口比较复杂，或伤口接近中枢神经，则注射抗血清进行被动免疫，0.5 ml/kg 体重，过 6 小时，疫苗接种。"
+            },
+            {
+                id: 55,
+                category: "poultry",
+                question: "高致病性禽流感的主要症状和病变有哪些？",
+                answer: "症状：体温升高，肉髯水肿，脚鳞紫变，拉黄绿色稀粪，垂翅，脚软，产蛋鸡产蛋下降。<br>病变：全身浆膜、粘膜有小出血点，尤其与肌胃相邻的腺胃粘膜、肌胃角质层下有出血点；胸骨内面、胸部肌肉、腹部脂肪和心内、外膜有出血点；头、眼、颈和胸部的水肿部位皮下呈淡黄色胶样浸润。"
+            },
+            {
+                id: 56,
+                category: "swine",
+                question: "简述猪肺疫的诊断方法？",
+                answer: "（1）临床诊断：根据流行病学、临床症状和病理变化作出初步判断。<br>（2）实验室诊断：取病死猪的肝、脾涂片，瑞氏染色，见两极着色小杆菌。然后进行细菌培养，在血琼脂培养基上长出湿润的水滴样小菌落，之后做动物试验，观察分离菌株的致病性，最后通过药敏试验筛选敏感药物。"
+            },
+            {
+                id: 57,
+                category: "general",
+                question: "试述口蹄疫的流行特点及防制措施。",
+                answer: "（1）流行特点：病原有 O、A、C、SAT1、SAT2、SAT3 和 Asia 1 7 个血清型和几十个血清亚型，血清型之间无交叉反应，血清亚型之间保护力不等。发病和隐性感染动物是主要的传染源，主要通过呼吸道传播；传染性极强，可呈跳跃式传播流行；可侵害多种偶蹄动物；一年四季均可发生，但是以秋末、冬春为常发季节。<br>（2）防制措施：不同的国家和地区的措施不一样，大致为 3 类：已消灭本病国家和地区：不从有病国家和地区输入活畜或动物产品，实施严格的检疫，杜绝疫源的传入。无病国家和地区：一旦发病，屠宰病畜，消灭传染源。有病国家和地区：屠宰病畜及同群畜，消灭疫源；对易感动物进行免疫接种；有计划地实施净化。"
+            },
+            {
+                id: 58,
+                category: "swine",
+                question: "简述猪蓝耳病的临床诊断要点（流行病学、典型症状、典型病变）",
+                answer: "是猪繁殖与呼吸综合症（PRRS）的俗称。是 PRRSV 引起的猪的一种繁殖障碍和呼吸系统传染病。<br>（1）本病只感染猪，病猪和带毒猪是主要传染源、各年龄和品种的猪均易感染；可通过呼吸道、消化道感染、也可垂直传播；<br>（2）各种其主要特征为母猪发热、厌食和怀孕后期繁殖障碍（流产、死胎、木乃伊胎和弱仔等）；各种年龄的发生猪呼吸道疾病，尤其是仔猪呼吸的呼吸系统疾病和高死亡率为特征。<br>（3）本病主要病理变化在肺脏，表现为间质性肺炎"
+            },
+            {
+                id: 59,
+                category: "swine",
+                question: "请列举 3 种可引起母猪流产的疾病。",
+                answer: "猪伪狂犬病、猪蓝耳病、猪细小病毒病。<br>猪蓝耳病，是由 PRRSV 引起的猪的一种繁殖障碍和呼吸系统传染病。其主要特征为母猪发热、厌食和怀孕后期繁殖障碍（流产、死胎、木乃伊胎和弱仔等）；各种年龄的发生猪呼吸道疾病，尤其是仔猪呼吸的呼吸系统疾病和高死亡率为特征。<br>猪伪狂犬病是由伪狂犬病病毒（PRV）引起的一种急性传染病。新生仔猪表现高热、呕吐、腹泻和神经症状；大猪多为隐性感染，也可出现发热和呼吸系统症状；怀孕母猪主要出现流产和死胎。<br>猪细小病毒病是由猪细小病毒引起猪的繁殖障碍性疾病，主要感染母猪（特别是初产母），引起母猪流产、产死胎、木乃伊胎、畸形胎、病弱仔猪，母猪本身常无明显症状。"
+            },
+            {
+                id: 60,
+                category: "swine",
+                question: "请列举 3 种引起猪呼吸困难的细菌病，并概述其特征。",
+                answer: "（1）猪接触传染性胸膜肺炎：是由胸膜肺炎放线杆菌（APP）引起一种急性呼吸道疾病。急性型出现高度呼吸困难、咳嗽和死亡，慢性型表现消瘦、生长迟缓，料肉比下降。病理变化主要是急性出血性、纤维素性胸膜肺炎、慢性表现局灶性、坏死性肺炎。<br>（2）副猪嗜血杆菌病：是由副猪嗜血杆菌引起的猪的多发性浆膜炎和关节炎，主要临诊症状为发热、咳嗽、呼吸困难、消瘦、跛行、共济失调和被毛粗乱等。病理变化为胸膜炎、心包炎、肺炎、腹膜炎、关节炎和脑膜炎，主要是纤维素性炎症。<br>（3）猪气喘病，是由猪肺炎支原体引起的猪的一种慢性、接触性、呼吸道传染病。主要特征是咳嗽与喘气，病变特征是肺脏的心叶、尖叶、中间叶、膈叶前缘呈肉样或虾肉样实变。"
+            },
+            {
+                id: 61,
+                category: "poultry",
+                question: "请列举 5 种以呼吸道症状为特征的鸡传染病。",
+                answer: "禽流感、新城疫、传染性支气管炎、传染性喉气管炎、传染性鼻炎、鸡毒支原体感染。"
+            },
+            {
+                id: 62,
+                category: "poultry",
+                question: "简述小鹅瘟的流行病学、临床症状及病理变化诊断要点。",
+                answer: "（1）流行病学主要为鹅群发病突然，传播迅速，高传染性和死亡率。<br>（2）临床症状表现为精神委顿，食欲废绝，严重下痢，有时出现神经症状。<br>（3）病理变化主要为肠道黏膜充血出血，坏死脱落，与纤维素性渗出物凝固形成肠栓。"
+            },
+            {
+                id: 63,
+                category: "poultry",
+                question: "某规模化鹅场 12 日龄雏鹅发生小鹅瘟疫情，应采取的具体措施有哪些？",
+                answer: "（1）隔离病鹅。<br>（2）病死鹅深埋或焚烧等无害化处理。<br>（3）采用小鹅高免卵黄抗体或高免血清进行治疗。<br>（4）辅之以抗菌药物；投喂多维等抗应激药物。<br>（5）每天对鹅场彻底消毒、带鸭鹅消毒。"
+            },
+            {
+                id: 64,
+                category: "poultry",
+                question: "简述鸭传染性浆膜炎的临床症状及病理变化诊断要点。",
+                answer: "（1）临床症状主要表现为倦怠，缩颈，不食或少食，眼鼻有黏液性分泌物；拉淡黄白色或黄绿色稀粪；不愿走动或行动跟不上群，死亡前可出现神经症状。<br>（2）病理变化主要为广泛性纤维素性渗出物，以心包膜、肝脏表面以及气囊最常见。纤维素性心包炎，心包液增多，心外膜表面覆盖纤维性渗出物；肝脏肿大，表面被一层灰白色或淡黄色纤维素膜覆盖；气囊混浊、增厚且附有纤维素性渗出物；脑膜充血、出血。"
+            },
+            {
+                id: 65,
+                category: "ruminant",
+                question: "蓝舌病的主要防控措施有哪些？",
+                answer: "(1) 蓝舌病病毒的多型性和在不同血清型之间无交互免疫性的特点，使免疫接种产生一定的困难。如需免疫接种，应先确定当地流行的病毒血清型，选用相应血清型的疫苗，才能获得满意的结果。弱毒疫苗接种后可引起不同程度的病毒血症，同时对胎儿有影响，导致母羊流产。运用时应加以注意；<br>(2) 严禁从有本病的国家、地区引进羊只；<br>(3) 加强冷冻精液的管理，严禁用带毒精液进行人工授精；<br>(4) 放牧时选用高地放牧，不在野外低湿地过夜，以减少感染机会；<br>(5) 定期进行药浴、驱虫，控制和消灭本病的媒介昆虫；<br>(6) 在新发生地区可进行紧急预防接种，并淘汰全部病羊。"
+            },
+            {
+                id: 66,
+                category: "parasite",
+                question: "简述寄生虫对寄生生活的适应。",
+                answer: "体形上的改变；附着器官的丧失；消化器官的退化、消失；生殖器官的高度发达，繁殖增强。"
+            },
+            {
+                id: 67,
+                category: "parasite",
+                question: "简述寄生虫的感染途径。",
+                answer: "指寄生虫侵入宿主的门户或方式，包括：<br>（1）经口感染；<br>（2）经皮肤感染；<br>（3）经接触感染；<br>（4）经胎盘感染；<br>（5）经呼吸道感染；<br>（6）自身感染。"
+            },
+            {
+                id: 68,
+                category: "parasite",
+                question: "简述宿主对寄生虫的非特异性免疫包括哪些方面？",
+                answer: "皮肤、黏膜和胎盘的天然屏障作用；吞噬细胞的吞噬作用；补体系统的作用；机体体液因素的作用。"
+            },
+            {
+                id: 69,
+                category: "general",
+                question: "简述免疫失败的原因。",
+                answer: "动物免疫接种后，在免疫有效期内不能抵抗相应病原体的侵袭，或效力检查不合格即为免疫失败。导致的原因主要有：<br>（1）疫苗免疫保护性能差。<br>（2）疫苗株与流行感染株不一致。<br>（3）疫苗运输或使用方式不当。<br>（4）母源抗体或残留抗体干扰。<br>（5）不同种类疫苗间的干扰作用。<br>（6）免疫抑制性疾病的影响或接种动物已处于某疫病潜伏期。"
+            }
+        ];
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', () => {
+            renderQuestions('all');
+            
+            // 添加分类按钮事件
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // 移除所有按钮的active类
+                    document.querySelectorAll('.category-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    // 为当前按钮添加active类
+                    btn.classList.add('active');
+                    
+                    // 渲染对应分类的题目
+                    renderQuestions(btn.dataset.category);
+                });
+            });
+        });
+
+        // 渲染题目函数
+        function renderQuestions(category) {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            // 获取筛选后的题目
+            const filteredQuestions = category === 'all' 
+                ? questionBank 
+                : questionBank.filter(q => q.category === category);
+            
+            // 如果没有题目，显示提示
+            if (filteredQuestions.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <h3><i class="fas fa-search"></i> 没有找到相关题目</h3>
+                        <p>当前分类下暂无题目，请选择其他分类</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 渲染题目卡片
+            filteredQuestions.forEach(q => {
+                // 获取分类名称
+                let categoryName = '';
+                let categoryClass = '';
+                switch(q.category) {
+                    case 'swine': 
+                        categoryName = '猪传染病';
+                        categoryClass = 'swine';
+                        break;
+                    case 'poultry': 
+                        categoryName = '禽传染病';
+                        categoryClass = 'poultry';
+                        break;
+                    case 'ruminant': 
+                        categoryName = '牛羊传染病';
+                        categoryClass = 'ruminant';
+                        break;
+                    case 'parasite': 
+                        categoryName = '寄生虫病';
+                        categoryClass = 'parasite';
+                        break;
+                    case 'zoonosis': 
+                        categoryName = '人畜共患病';
+                        categoryClass = 'zoonosis';
+                        break;
+                    case 'general': 
+                        categoryName = '通用知识';
+                        categoryClass = 'general';
+                        break;
+                }
+                
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span class="question-id">${q.id}/231</span>
+                        <span class="question-category ${categoryClass}">${categoryName}</span>
+                    </div>
+                    <div class="question-text">
+                        ${q.question}
+                    </div>
+                    <div class="answer-container" id="answer-${q.id}">
+                        <div class="answer-title"><i class="fas fa-lightbulb"></i> 参考答案：</div>
+                        <div class="answer-content">${q.answer}</div>
+                    </div>
+                    <button class="toggle-btn" data-id="${q.id}">
+                        <i class="fas fa-eye"></i> 显示答案
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+            
+            // 添加答案切换事件
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    const answerContainer = document.getElementById(`answer-${id}`);
+                    answerContainer.classList.toggle('show');
+                    
+                    if (answerContainer.classList.contains('show')) {
+                        btn.innerHTML = '<i class="fas fa-eye-slash"></i> 隐藏答案';
+                    } else {
+                        btn.innerHTML = '<i class="fas fa-eye"></i> 显示答案';
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动物寄生虫与传染病学在线百科</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-bg: #f5f5f5;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-radius: 5px;
+        }
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 25px;
+        }
+        .sidebar {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1em;
+        }
+        .nav-category {
+            margin-bottom: 15px;
+        }
+        .nav-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .nav-item {
+            margin-bottom: 5px;
+        }
+        .nav-link {
+            display: block;
+            padding: 8px 10px;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+        .nav-link:hover {
+            background-color: #f0f7fc;
+            color: var(--secondary-color);
+        }
+        .main-content {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        h2 {
+            color: var(--primary-color);
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 15px;
+            margin: 30px 0 20px;
+        }
+        h3 {
+            color: var(--secondary-color);
+            margin: 25px 0 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        h3::before {
+            content: "▶";
+            font-size: 0.8em;
+            margin-right: 10px;
+            color: var(--accent-color);
+            transition: transform 0.2s;
+        }
+        h3.active::before {
+            transform: rotate(90deg);
+        }
+        .term-card {
+            border-left: 3px solid var(--secondary-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: var(--light-bg);
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            transition: all 0.3s;
+        }
+        .term-card:hover {
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        .term-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+        .term-definition {
+            margin: 0;
+        }
+        .example {
+            font-style: italic;
+            color: #666;
+            margin-top: 8px;
+            padding-left: 15px;
+            border-left: 2px solid #ddd;
+        }
+        .disease-card {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .disease-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .disease-name {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.2em;
+        }
+        .pathogen {
+            color: var(--accent-color);
+            font-style: italic;
+        }
+        .features {
+            margin-top: 10px;
+        }
+        .highlight {
+            background-color: #fffde7;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9em;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: static;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>动物寄生虫与传染病学在线百科</h1>
+            <div class="subtitle">专业兽医参考资料 · 寄生虫学与传染病学知识库</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="grid">
+            <aside class="sidebar">
+                <input type="text" class="search-box" placeholder="搜索术语或疾病...">
+                
+                <div class="nav-category">
+                    <div class="nav-title">寄生虫学基础</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="#host-types" class="nav-link">宿主类型</a></li>
+                        <li class="nav-item"><a href="#life-cycle" class="nav-link">生活史类型</a></li>
+                        <li class="nav-item"><a href="#immunity" class="nav-link">免疫现象</a></li>
+                        <li class="nav-item"><a href="#parasite-types" class="nav-link">寄生虫分类</a></li>
+                    </ul>
+                </div>
+                
+                <div class="nav-category">
+                    <div class="nav-title">传染病专题</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="#duck-infections" class="nav-link">鸭类传染病</a></li>
+                        <li class="nav-item"><a href="#swine-infections" class="nav-link">猪类传染病</a></li>
+                    </ul>
+                </div>
+                
+                <div class="nav-category">
+                    <div class="nav-title">核心概念</div>
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="#infection-types" class="nav-link">感染类型</a></li>
+                        <li class="nav-item"><a href="#host-parasite" class="nav-link">寄生虫与宿主</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <main class="main-content">
+                <section id="host-types">
+                    <h2>宿主类型</h2>
+                    
+                    <h3 id="final-host">终末宿主</h3>
+                    <div class="term-card">
+                        <div class="term-name">终末宿主</div>
+                        <p class="term-definition">寄生虫的成虫或有性生殖阶段所寄生的宿主。</p>
+                        <div class="example">例如：肝片吸虫的成虫寄生于牛羊肝脏内，牛羊即为肝片吸虫的终末宿主；弓形虫的有性生殖阶段在猫肠上皮细胞内完成，因此猫为弓形虫的终末宿主。</div>
+                    </div>
+                    
+                    <h3 id="intermediate-host">中间宿主</h3>
+                    <div class="term-card">
+                        <div class="term-name">中间宿主</div>
+                        <p class="term-definition">寄生虫的幼虫或无性繁殖阶段所寄生的宿主称为中间宿主。具有两个中间宿主时，便依其发育阶段的先后分别称为第一中间宿主、第二中间宿主。第二中间宿主又称为补充宿主。</p>
+                    </div>
+                    
+                    <h3 id="reservoir-host">储藏宿主</h3>
+                    <div class="term-card">
+                        <div class="term-name">储藏宿主（连续宿主/传递宿主）</div>
+                        <p class="term-definition">寄生虫的感染性幼虫在侵入一个非适宜宿主体内后，不进行发育，也不繁殖，或仅稍有发育，但仍保持对正常宿主的感染能力，这种非适宜宿主就成为储藏宿主。</p>
+                    </div>
+                    
+                    <h3 id="carrier-host">带虫者</h3>
+                    <div class="term-card">
+                        <div class="term-name">带虫者</div>
+                        <p class="term-definition">指体内有寄生虫寄生，但没有临床症状的宿主。</p>
+                    </div>
+                </section>
+
+                <section id="life-cycle">
+                    <h2>生活史类型</h2>
+                    
+                    <h3 id="direct-life-cycle">直接生活史</h3>
+                    <div class="term-card">
+                        <div class="term-name">直接生活史</div>
+                        <p class="term-definition">寄生虫的发育过程不需要中间宿主，只在一个宿主内或外界完成。</p>
+                    </div>
+                    
+                    <h3 id="indirect-life-cycle">间接生活史</h3>
+                    <div class="term-card">
+                        <div class="term-name">间接生活史</div>
+                        <p class="term-definition">寄生虫发育需要一个或多个中间宿主。</p>
+                    </div>
+                    
+                    <h3 id="parasite-life-cycle">寄生虫生活史</h3>
+                    <div class="term-card">
+                        <div class="term-name">寄生虫生活史（发育史/生活环）</div>
+                        <p class="term-definition">指完成一代的生长、发育和繁殖的全部过程。不需要中间宿主的发育史，又称为直接发育史；需要中间宿主的发育史，称为间接发育史。</p>
+                    </div>
+                </section>
+
+                <section id="immunity">
+                    <h2>免疫现象</h2>
+                    
+                    <h3 id="concomitant-immunity">伴随免疫</h3>
+                    <div class="term-card">
+                        <div class="term-name">伴随免疫</div>
+                        <p class="term-definition">有别于原虫感染引起的带虫免疫，指机体感染蠕虫后所产生的免疫力，这种免疫力仅对童虫的再次感染有一定的抵抗力，而对体内成虫不产生影响。如果体内成虫消失，则免疫力也消失。大多数蠕虫感染属于此类。</p>
+                    </div>
+                    
+                    <h3 id="premunition">带虫免疫</h3>
+                    <div class="term-card">
+                        <div class="term-name">带虫免疫</div>
+                        <p class="term-definition">机体感染原虫后产生的对这种原虫的再感染具有抵抗力，但不能将体内已有的原虫全部清除，只能将其数量降低到较低水平。用药物驱除体内寄生虫后，体内原虫消失，这种免疫力也随之消失。</p>
+                    </div>
+                    
+                    <h3 id="immune-evasion">免疫逃避</h3>
+                    <div class="term-card">
+                        <div class="term-name">免疫逃避</div>
+                        <p class="term-definition">寄生虫能成功侵入具有正常免疫功能的动物宿主体内，并能通过各种方式逃避宿主的免疫攻击，从而在宿主体内发育、繁殖和生存，这种现象称为寄生虫的免疫逃避。</p>
+                    </div>
+                </section>
+
+                <section id="parasite-types">
+                    <h2>寄生虫分类</h2>
+                    
+                    <h3 id="endo-ecto-parasites">内寄生虫与外寄生虫</h3>
+                    <div class="term-card">
+                        <div class="term-name">内寄生虫与外寄生虫</div>
+                        <p class="term-definition">依寄生部位来分，寄生在宿主内部组织器官中的寄生虫为内寄生虫，如吸虫、绦虫、线虫等；寄生在宿主体表的寄生虫称为外寄生虫，如蜱虫、螨虫、虱等。</p>
+                    </div>
+                </section>
+
+                <section id="duck-infections">
+                    <h2>鸭类传染病</h2>
+                    
+                    <h3 id="duck-serosite">鸭传染性浆膜炎</h3>
+                    <div class="disease-card">
+                        <div class="disease-header">
+                            <div class="disease-name">鸭传染性浆膜炎</div>
+                            <div class="pathogen">鸭疫里默氏菌</div>
+                        </div>
+                        <div class="features">
+                            <p><strong>特征：</strong>鸭、鹅、火鸡等多种家禽和野禽的一种接触性、急性或慢性、败血症的传染病，主要侵害1-8周龄鸭。</p>
+                            <p><strong>病理特征：</strong>纤维素性心包炎、肝周炎、气囊炎、干酪性输卵管和关节炎。</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="infection-types">
+                    <h2>感染类型</h2>
+                    
+                    <h3 id="exogenous-infection">外源性感染</h3>
+                    <div class="term-card">
+                        <div class="term-name">外源性感染</div>
+                        <p class="term-definition">病原微生物从外界侵入机体引起的感染，大多数感染属于此类。</p>
+                    </div>
+                </section>
+
+                <section id="host-parasite">
+                    <h2>寄生虫与宿主</h2>
+                    
+                    <h3 id="parasite-host-concept">寄生虫与宿主的概念</h3>
+                    <div class="term-card">
+                        <div class="term-name">寄生虫与宿主</div>
+                        <p class="term-definition">一个较小的动物暂时地或永久地生活在另一个较大动物体内或者体表，前者从后者获得营养，并给后者带来不同程度的损害，甚至导致后者死亡。前者称为寄生虫，后者称为宿主。</p>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2023 动物寄生虫与传染病学在线百科 | 兽医专业教学参考资料</p>
+        <p>本内容仅供参考，实际诊断与治疗请遵循专业兽医指导</p>
+    </footer>
+
+    <script>
+        // 折叠功能
+        document.querySelectorAll('h3').forEach(header => {
+            header.addEventListener('click', () => {
+                header.classList.toggle('active');
+                const content = header.nextElementSibling;
+                content.style.display = content.style.display === 'none' ? 'block' : 'none';
+            });
+            
+            // 默认折叠所有内容
+            header.nextElementSibling.style.display = 'none';
+        });
+
+        // 展开当前锚点指向的内容
+        window.addEventListener('load', () => {
+            if (window.location.hash) {
+                const target = document.querySelector(window.location.hash);
+                if (target && target.tagName === 'H3') {
+                    target.classList.add('active');
+                    target.nextElementSibling.style.display = 'block';
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+
+        // 搜索功能
+        const searchBox = document.querySelector('.search-box');
+        searchBox.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.term-card, .disease-card');
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(term)) {
+                    card.style.display = 'block';
+                    // 展开父级标题
+                    const header = card.previousElementSibling;
+                    if (header && header.tagName === 'H3') {
+                        header.classList.add('active');
+                    }
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

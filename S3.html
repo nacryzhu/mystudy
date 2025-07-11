@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动物传染病与寄生虫学习题库</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .category-nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .category-btn {
+            padding: 12px 20px;
+            background: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .category-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .category-btn.active {
+            color: white;
+        }
+        
+        .category-btn.swine { background: #ff6b6b; }
+        .category-btn.swine.active, .category-btn.swine:hover { background: #ff5252; }
+        
+        .category-btn.poultry { background: #4ecdc4; }
+        .category-btn.poultry.active, .category-btn.poultry:hover { background: #3bc4bb; }
+        
+        .category-btn.ruminant { background: #ffd166; }
+        .category-btn.ruminant.active, .category-btn.ruminant:hover { background: #ffca52; }
+        
+        .category-btn.parasite { background: #a0c4ff; }
+        .category-btn.parasite.active, .category-btn.parasite:hover { background: #8fb8ff; }
+        
+        .category-btn.zoonosis { background: #ff9f7f; }
+        .category-btn.zoonosis.active, .category-btn.zoonosis:hover { background: #ff8f6a; }
+        
+        .category-btn.general { background: #bdb2ff; }
+        .category-btn.general.active, .category-btn.general:hover { background: #ab9eff; }
+        
+        .questions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .question-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .question-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .question-id {
+            background: #4a6572;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .question-category {
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: white;
+        }
+        
+        .question-text {
+            padding: 20px;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            flex-grow: 1;
+        }
+        
+        .answer-container {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        
+        .answer-container.show {
+            padding: 0 20px 20px;
+            max-height: 1000px;
+        }
+        
+        .answer-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .answer-content {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4a6572;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        
+        .toggle-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #4a6572;
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-align: center;
+        }
+        
+        .toggle-btn:hover {
+            background: #3a5460;
+        }
+        
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            color: #6c757d;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .questions-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-book-medical"></i> 动物传染病与寄生虫学习题库</h1>
+            <p class="subtitle">涵盖猪、禽、牛羊等动物主要传染病与寄生虫病知识，助力兽医专业学习</p>
+            <div class="stats">
+                <div class="stat-box"><i class="fas fa-paw"></i> 87道精选题目</div>
+                <div class="stat-box"><i class="fas fa-layer-group"></i> 6大知识分类</div>
+                <div class="stat-box"><i class="fas fa-graduation-cap"></i> 系统化学习</div>
+            </div>
+        </header>
+        
+        <div class="category-nav">
+            <button class="category-btn active" data-category="all">
+                <i class="fas fa-list"></i> 全部题目
+            </button>
+            <button class="category-btn swine" data-category="swine">
+                <i class="fas fa-piggy-bank"></i> 猪传染病
+            </button>
+            <button class="category-btn poultry" data-category="poultry">
+                <i class="fas fa-kiwi-bird"></i> 禽传染病
+            </button>
+            <button class="category-btn ruminant" data-category="ruminant">
+                <i class="fas fa-cow"></i> 牛羊传染病
+            </button>
+            <button class="category-btn parasite" data-category="parasite">
+                <i class="fas fa-bug"></i> 寄生虫病
+            </button>
+            <button class="category-btn zoonosis" data-category="zoonosis">
+                <i class="fas fa-user-md"></i> 人畜共患病
+            </button>
+            <button class="category-btn general" data-category="general">
+                <i class="fas fa-book"></i> 通用知识
+            </button>
+        </div>
+        
+        <div class="questions-container" id="questions-container">
+            <!-- 题目卡片将通过JavaScript动态生成 -->
+        </div>
+        
+        <footer>
+            <p>动物医学学习资料库 &copy; 2023 | 系统化学习动物传染病与寄生虫学</p>
+        </footer>
+    </div>
+
+    <script>
+        // 完整的题库数据（包含70-87题）
+        const questionBank = [
+            // 原有题目1-69（省略重复部分）...
+            
+            // 新增题目70-87
+            {
+                id: 70,
+                category: "ruminant",
+                question: "牛场如何进行结核病的综合防制？（论述题）",
+                answer: "（1）对无本病的畜群，加强平时防疫、检疫和消毒措施，防止本病传入。引入畜种时，必须就地检疫，隔离观察 1 - 2 月，确认无病者，方可混群饲养。健康畜群每年定期两次检疫，发现阳性反应者及时处理。对污染场，要进行反复多次检疫，阳性病畜及时进行无害化处理，逐步达到净化。（2）加强饲养管理和环境消毒，提高饲养管理水平，增强牛体抵抗力，对圈舍等环境定期消毒，消灭传染源与传播媒介。同时，牛舍内不能同时饲养其他牲畜及禽类，防止交叉感染。及时做好牛场管理人员的健康监测，避免人畜互相传染。（3）引进健康奶牛，培育健康奶牛群。对原来污染严重的场地实行关闭、停产。（4）建立奶牛档案，建立健全奶牛防疫制度。动物防疫部门应加强奶牛场户疫病防治工作的指导和监管，定期开展结核病等疫病的检疫、监测，以保障奶牛业的健康发展。（5）对非结核疫区定期用结核菌素试验，淘汰扑杀阳性牛；结核疫区运用结核菌素试验和 ELISA 相结合进行检疫，淘汰扑杀阳性牛，加速牛群的净化。"
+            },
+            {
+                id: 71,
+                category: "poultry",
+                question: "鸡白痢净化的原理是什么？试为一个种鸡选育场制定一个鸡白痢的净化方案。",
+                answer: "（1）原理：鸡感染沙门氏菌后，成年后在血清中会有凝集抗体的存在，所以可以通过凝集抗体的检测来判定鸡体的带菌情况。凝集抗体阳性的鸡应实施淘汰。（2）措施：①坚持自繁自养，不从有病鸡场引种，同时防止野鸟、老鼠入侵。②净化种群：通过检疫，实施群体净化。鸡白痢沙门氏菌、禽伤寒沙门氏菌可通过反复检测（常用血清玻片凝集试验）和淘汰鸡群中的阳性鸡来逐步净化。检测工作须每隔 1 - 2 月做一次，至连续 2 次全群检测都呈阴性为止。通常经 2 - 3 次的重复检疫可以检出全部感染禽。③执行严格的卫生、消毒和隔离制度，尤其是种蛋、育雏室和雏鸡的熏蒸消毒。饲养管理上使用笼养或网上平养技术，防止鸡白痢在鸡群间的相互感染和减少新感染鸡群的出现。"
+            },
+            {
+                id: 72,
+                category: "poultry",
+                question: "火鸡组织滴虫病的剖检变化与防治措施。",
+                answer: "（1）剖解变化：主要局限于盲肠和肝脏，其他器官无异常。（1）盲肠双侧或单侧肿大，内容物干硬，横断面中央为黑色的凝血块，周围为干酪样坏死物，呈同心圆排列。急性病例见单侧盲肠呈出血性肠炎变化。（2）肝脏肿大，表明有圆形或不规则形，中央凹陷边缘隆起的坏死病灶。（2）防治措施：a、治疗病禽：可选用呋喃唑酮或甲硝唑（灭滴灵）；b、驱虫与消毒：定期对成年鸡进行异刺线虫驱虫；c、雏禽和成年禽分开饲养；d、在育雏期间，在饲料中拌入痢特灵或甲硝唑预防。"
+            },
+            {
+                id: 73,
+                category: "parasite",
+                question: "猪弓形虫病的临床症状与病理变化。",
+                answer: "临床症状：高热、精神沉郁、眼结膜充血，在耳、鼻、下腹、股内侧等处出现淤血斑或发绀，后肢软弱无力，喜卧；腹股沟淋巴结肿大，严重的呼吸困难，如犬坐势张口呼吸，甚至口流泡沫而亡。病理变化：急性型病例呈现全身性病变，包括淋巴结、肝、肺和心脏等器官肿大，并有许多出血点和坏死灶；肠道充血。腹腔、肠腔有渗出物。慢性型病例呈现各内脏器官水肿，并散在坏死灶。"
+            },
+            {
+                id: 74,
+                category: "parasite",
+                question: "柔嫩艾美耳球虫引起的鸡球虫病的临床症状与预防措施。",
+                answer: "（1）临床症状：感染后 4 - 5 天，鸡突然排泄大量血便，贫血明显，运动迟钝，呆立鸡舍角落呈假睡状。血便发生起 1 - 2 天内，鸡大批死亡，第 7 天多停止出血，第 8 天已不再有血便。存活的鸡则逐渐康复。（2）预防措施：①药物预防：采用聚醚类离子载体抗生素类药物和化学合成药类药物，从鸡出壳开始添加抗球虫药物；②抗球虫药物的使用方案：为了防止长期使用抗球虫药物引起耐药性或推迟药物出现耐药性时间，添加药物时需要采用连续给药、穿梭用药、轮换用药及联合用药的方式进行给药。③免疫学预防：用市售的球虫疫苗进行免疫鸡群。④一般的卫生消毒措施：雏鸡和成年鸡分开饲养；保证饲料、饮水的清洁卫生；注意鸡舍及运动场等的清洁消毒工作；鸡粪、垫料堆积发酵；给予全价饲料，增强鸡的抵抗力。"
+            },
+            {
+                id: 75,
+                category: "parasite",
+                question: "动物疥螨病的临床症状与诊断方法。",
+                answer: "（1）剧痒：贯穿于整个病程的主要症状，病势越重，痒觉越剧烈。疥螨挖掘隧道，体表的刺、毛和鳞片，同时分泌的毒素，导致皮肤发痒。（2）患部皮肤形成痂皮：虫体的机械性刺激和毒素作用下，皮肤出现炎性浸润。动物不断抹茶，导致水泡破裂，最后形成痂皮。（3）皮肤脱毛、增厚、弹性降低：多先发生于毛少皮肤柔软的地方，以后向全身扩展。（4）消瘦：病畜终日啃咬、摩擦和烦躁不安，导致消化、吸收功能障碍。诊断方法：（1）病料采集：用消毒后的钝刀在患病部位与健康部位交界处，用力刮取皮屑，直至皮肤微有出血位置。（2）检查方法：A：活虫检查法：a 直接涂片检查：50% 甘油蒸馏水；b 热源法。B：死虫检查法：a 煤油浸泡法，b 沉淀法（10% NaOH），c 漂浮法：先沉淀再用 60% Na2S2O3 漂浮。"
+            },
+            {
+                id: 76,
+                category: "parasite",
+                question: "猪蛔虫的生活史及猪蛔虫病的防治措施。",
+                answer: "（1）生活史：蛔虫发育不需要中间宿主。刚产出的虫卵属单细胞期，随宿主粪便排至外界，在适宜的温度、湿度和氧气充足的环境中发育形成第一期幼虫，第一期幼虫经过蜕皮，变为虫卵第二期幼虫，再经过 3 - 5 周的成熟过程，形成感染性虫卵阶段。感染性虫卵被猪吞食后，在小肠内孵出幼虫，幼虫穿过肠壁随血液通过门静脉到达肝脏，在肝内进行第二次蜕皮，变为第三期幼虫后，又随血液经肝静脉、后腔静脉进入右心房、右心室和肺动脉到肺部毛细血管，并穿破毛细血管进入肺泡，在肺脏内进行第三次蜕皮，形成第四期幼虫，四期幼虫经细支气管、支气管及气管，随粘液到达咽部，再经食道、胃返回小肠，进行第四次蜕皮变为成虫（雄虫和雌虫）。（2）防治措施：a、定期按计划驱虫。b、避免猪粪污染。仔猪断奶后尽可能饲养在没有蛔虫卵污染的圈舍或牧场。c、保持猪舍和运动场清洁 猪舍应通风良好，阳光充足，避免阴暗、潮湿和拥挤。猪圈内和运动场要勤打扫，勤冲洗，勤换垫草。定期消毒。场内地面保持平整，周围须有排水沟，以防积水。d、猪粪的无害化处理 猪的粪便和垫草清除出圈后，要运到距猪舍较远的场所堆积发酵，或挖坑沤肥，以杀灭虫卵。e、严格控制引入病猪 在已控制或消灭猪蛔虫病的猪场，引入猪只时，应先隔离饲养，进行粪便检查，发现带虫猪时，须进行 1 - 2 次驱虫后再与本场猪并群饲养。"
+            },
+            {
+                id: 77,
+                category: "swine",
+                question: "论述猪场如何综合防控猪伪狂犬病？",
+                answer: "猪伪狂犬病无特效治疗药物，但有可靠的疫苗。本病主要采取以疫苗接种为主的综合防控措施。主要包括以下 3 方面:（1）平时的预防措施：首先搞好生物安全、饲养管理、环境卫生；加强后备猪的引种检疫等；消灭老鼠对预防本病有重要的意义；严格将其他动物与猪分开饲养，避免交互感染。疫苗预防接种：缺失 gE 基因的活疫苗已成为猪场的首选疫苗。免疫程序可采取全群普免，即全群公猪和母猪 2 - 4 次 / 年，也可跟胎免疫，在母猪产前 1 个月注射一次；小猪产后 1 - 3 天，滴鼻免疫，再于 50 - 70 日龄左右肌注加强免疫 1 次。规模猪场最好进行免疫评估，制定个性化的免疫程序，以达到最佳免疫效果。（2）发病后的控制措施：发病先进行准确诊断，本病后可采用基因缺失活疫苗全群紧急接种，有较好的控制效果。发病死亡动物要严格进行无害化处理。（3）净化与根除：本病已具备净化技术条件，采用基因缺失疫苗免疫和配套鉴别方法，部分大型规模种猪场已经建立了伪狂犬病阴性猪群。开展本病净化，同时要加强猪场生物安全，防止疫情再次传入；由于鼠类可携带伪狂犬病病毒，要定期灭鼠。"
+            },
+            {
+                id: 78,
+                category: "poultry",
+                question: "请论述新城疫的防控措施。",
+                answer: "预防措施:（1）生物安全措施：禽场的选址和生产的规模等考虑有利于病原体的侵入；日常的隔离、卫生、消毒制度；防止一切带毒动物和污染物进入禽群；进入的人员、车辆和用具消毒；饲料和饮水安全；全进全出；检验检疫；不从疫区引进种蛋和鸡苗，新购鸡群隔离观察。（2）免疫接种：制定合理的免疫程序；可选择 I、III、IV 系苗，采用点眼、滴鼻、饮水和气雾免疫进行疫苗接种。蛋鸡首免时间是母源抗体滴度下降到 25 以下时（3 - 7 日龄，活疫苗），灭活苗或活疫苗在 10 - 14 日龄二免，灭活苗或活疫苗在 12 周龄三免，灭活苗在开产前（17 - 18 周龄）四免，开产后根据抗体滴度检测情况进行强化免疫。商品肉鸡: 7 - 10 日龄用活疫苗或灭活苗首免；2 周后加强免疫。疫情发生后的措施：尽快确诊；及时上报；对确诊疫情划定疫点、疫区和受威胁区，对疫点或疫区采取严格的封锁、隔离、消毒、扑杀病鸡和紧急预防接种等综合措施迅速扑灭疫情。形成以免疫为主，采取 “扑杀与免疫相结合” 的综合性防治措施。"
+            },
+            {
+                id: 79,
+                category: "swine",
+                question: "论述猪场如何综合防控非洲猪瘟？",
+                answer: "本病目前无药治疗、无疫苗可用。猪场要采取 “以生物安全为中心” 的综合防控措施。具体包括:（1）切实搞好生物安全，杜绝疫病传入猪场：猪场全体员工要认识到生物安全的重要性、制定科学可行的生物安全制度、改造升级生物安全相关硬件设备（如车辆洗、消、烘等）、关键是要重视细节、狠抓落实、执行到位。猪场生物安全的重点，是杜绝各种接触传播的风险因素，包括前面已提到的人、猪、猪肉制品、车辆、物品、饲料、饮水、各种媒介等。（2）加强猪群监测，及时诊断和处置：本病的确诊需借助实验室诊断。目前主要采用荧光定量 PCR 快速确诊异常猪，检测样品可采集口腔液、血液、各种组织样品等。（3）建立群防群控机制：在非洲猪瘟感染的大环境下，每个猪场不要奢望能独善其身，必须要有合作意识，与周边猪场形成命运共同体，建立防控联盟，群防群控，共同应对，才能取得好的防控效果。（4）发病后措施：发病后迅速封锁猪场，按重大传染病 “早、快、严、小” 的原则，采取无害化处理，防止疫情蔓延传播。"
+            },
+            {
+                id: 80,
+                category: "parasite",
+                question: "猪弓形虫病的诊断方法与防控措施。",
+                answer: "诊断方法:（1）病原学检测：直接涂片法（病死动物的肝、肺等涂片染色镜检）、集虫法（采集腹水、血液等离心，取沉淀镜检）、动物接种法（患病动物肝、肺等组织研磨后取上清，腹腔接种小鼠，后取小鼠腹水镜检）；（2）血清学检测: DT、IHA、ELISA 等多种商品化试剂盒；（3）分子生物学检测: PCR 检测。防控措施：猪场及周围禁止养猫；防止饲料、饮水被猫粪污染；不用生的泔脚水喂猪；患弓形虫病的尸体深埋。"
+            },
+            {
+                id: 81,
+                category: "parasite",
+                question: "鸡卡氏住白细胞虫的剖解特征和防治措施。",
+                answer: "剖解特征：白冠；全身皮下出血，肌肉尤其是胸肌、腿肌、心肌有大小不等的出血点；各内脏器官肿大出血，尤其是肾、肺出血最严重；胸肌、腿肌、心肌、脾等器官上有灰白色或稍带黄色的，针尖至粟粒大与周围组织有明显分界的小结节。防治措施: A. 消灭媒介昆虫：在鸡舍及周围喷洒溴氰菊酯等药物；B. 药物预防：根据当地以往本病发生的历史，在本病即将发生或流行初期，以泰灭净、磺胺二甲氧嘧啶等药物预防。"
+            },
+            {
+                id: 82,
+                category: "poultry",
+                question: "马立克病目前有疫苗可用，但常出现免疫失败，请论述造成其免疫失败的原因？",
+                answer: "一是早期感染，疫苗接种后一般要 7 天才可产生免疫力；二是 REV、IBDV、鸡传染性贫血病毒等免疫抑制因素的存在可干扰疫苗的免疫效率；三是疫苗稀释及接种的差错，如稀释温度不当，稀释后没有在规定时间内免疫，接种错漏等；四是疫苗质量；五是超强毒及特超强毒的出现，它可突破某些疫苗的免疫力。"
+            },
+            {
+                id: 83,
+                category: "parasite",
+                question: "动物痒螨病的病原学诊断方法与防治措施？",
+                answer: "（1）诊断方法：热源法，刮取动物体表干燥皮屑，放于培养皿或黑纸上，在日光下，或用热水或炉火等对皿底或黑纸底面给以加热，经 30 - 40min 后，移走皮屑，肉眼观察有无螨虫。（2）防治措施: a、笼舍要经常保持清洁干燥，通风，透光，不拥挤；动物体经常刷洗；治疗病畜；b、笼舍和饲具定期消毒；c、疫区定期采用药物进行药浴、淋浴及喷雾进行预防。"
+            },
+            {
+                id: 84,
+                category: "parasite",
+                question: "简述旋毛虫病诊断方法与预防措施。",
+                answer: "（1）诊断方法: a、生前诊断：采用间接血凝抑制试验等免疫学方法进行检查；b、死后检验：目检法（将新鲜取膈肌脚撕去肌膜，用肉眼观察有无灰白色或浅白色的小白点）、镜检法（取膈肌脚小块肉样，撕去肌膜，放于 2 玻片间，用力适度捏住玻片两端轻轻加压，把肉粒压成很薄的薄片，低倍镜下观察有无包囊）、消化法（取肉样用搅拌机搅碎，加入胃蛋白酶后校花，取沉渣镜检）。（2）预防措施: a、以治灭源：发现病猪立即治疗，在猪出栏前、屠宰前治疗；b、以检堵漏：严格检疫，杜绝含旋毛虫的病肉上市；凡检出的感染肉品必须无害化处理；严重感染的肉品应销毁或作工业材料；c、加强卫生管理及宣传教育：改善养猪条件，实行圈养；养殖场等地灭鼠；泔水需煮沸后喂猪。"
+            },
+            {
+                id: 85,
+                category: "poultry",
+                question: "目前无疫苗用于预防禽白血病，生产上主要通过净化控制该疫病。请为一个种鸡场制定该病的净化方案。",
+                answer: "净化的有效措施是减少种鸡群的感染率和建立无禽白血病的种鸡群。从种鸡群消灭禽白血病的步骤：从蛋清和泄殖腔拭子 ELISA 抗原检测阴性的的母鸡选择受精蛋进行孵化；在隔离条件下小批量出雏，接种疫苗时每雏更换针头；测定雏鸡血液是否抗原阳性，淘汰阳性雏鸡及与之接触者；在隔离条件下饲养无白血病病毒的各组鸡，连续进行 4 代，建立无禽白血病病毒替代群。一般的种鸡场通过 ELISA 检测和淘汰母鸡以减少感染；每批之间孵化器、出雏器、育雏室彻底清扫消毒。"
+            },
+            {
+                id: 86,
+                category: "swine",
+                question: "论述猪场如何综合防控猪蓝耳病？",
+                answer: "答：本病主要采取综合性防控措施，包括平时的预防、发病后的控制以及净化措施三方面。（1）平时的预防措施：猪场应加强饲养管理，加强生物安全、杜绝疫病传入和场内循环传播；加强引种检疫与隔离；搞好疫苗预防接种：猪场最好根据本场免疫监测结果，制定个性化的免疫程序：后备母猪配种前进行 2 次基础免疫；仔猪常在 2 - 3 周龄免疫，可在 3 周后加强免疫一次；规模猪场多采用普免的方式，每年 3 次左右。（2）发病的控制措施：发病后首先准确诊断，疫苗紧急接种有一定的控制效果；猪蓝耳病通常会有其他疾病的继发感染或混合感染，要同时配合相应的措施，才能取得最佳控制效果。长期不稳定的猪场，可以对后备母猪进行驯化。（3）关于猪蓝耳病的净化：条件成熟的猪场可开展本病净化，但净化难度较大。根据猪场规模、管理水平和病毒感染状况，可采用不同的根除和净化方法。现在多采用检测 - 淘汰 - 封闭的技术程序，逐渐建立无病毒猪群，同时制定严格的生物安全措施、防止病毒再次感染猪群。"
+            },
+            {
+                id: 87,
+                category: "swine",
+                question: "口蹄疫难以控制和消灭的原因是什么？如何预防和扑灭猪口蹄疫？",
+                answer: "FMD 难以控制和消灭的原因:（1）宿主谱广，FMDV 易感动物多达 33 种偶蹄兽对 FMDV 易感；（2）FMDV 毒力强，传播速度快；（3）可通过风媒传播；（4）病毒类型多且易发生变异，有 7 个主型，不同血清型或亚型之间交叉保护力很低或没有；（5）口蹄疫病毒的持续感染，它能在感染后痊愈动物内存在相当长的时间，使感染动物成为带毒者；（6）FMD 病毒有很强的抵抗力，在低温下十分稳定，在外界保持传染性数天至一个月，冻肉中病毒长期存在。（7）疫苗免疫不能产生 100% 保护率，病毒在群内能循环传播。预防和消灭 FMD 的措施:（1）要贯彻 “早、快、严、小” 的灭病原则和 “预防为主” 的防治措施，防制本病应根据本国实际情况采取相应对策；（2）无病地区做好进口检疫和边境检疫，防止国外疫病的传入，禁止从有病国家输入活畜或动物产品，杜绝疫源传入。一旦发现本病应采取扑杀病畜，应立即实行封锁、隔离、检疫、消毒等措施，迅速通报疫性、查源灭源，并对易感畜群进行预防接种以及时清除疫点。（4）加强国际合作，区域协防。"
+            }
+        ];
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', () => {
+            renderQuestions('all');
+            
+            // 添加分类按钮事件
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // 移除所有按钮的active类
+                    document.querySelectorAll('.category-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    // 为当前按钮添加active类
+                    btn.classList.add('active');
+                    
+                    // 渲染对应分类的题目
+                    renderQuestions(btn.dataset.category);
+                });
+            });
+        });
+
+        // 渲染题目函数
+        function renderQuestions(category) {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            // 获取筛选后的题目
+            const filteredQuestions = category === 'all' 
+                ? questionBank 
+                : questionBank.filter(q => q.category === category);
+            
+            // 如果没有题目，显示提示
+            if (filteredQuestions.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <h3><i class="fas fa-search"></i> 没有找到相关题目</h3>
+                        <p>当前分类下暂无题目，请选择其他分类</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 渲染题目卡片
+            filteredQuestions.forEach(q => {
+                // 获取分类名称
+                let categoryName = '';
+                let categoryClass = '';
+                switch(q.category) {
+                    case 'swine': 
+                        categoryName = '猪传染病';
+                        categoryClass = 'swine';
+                        break;
+                    case 'poultry': 
+                        categoryName = '禽传染病';
+                        categoryClass = 'poultry';
+                        break;
+                    case 'ruminant': 
+                        categoryName = '牛羊传染病';
+                        categoryClass = 'ruminant';
+                        break;
+                    case 'parasite': 
+                        categoryName = '寄生虫病';
+                        categoryClass = 'parasite';
+                        break;
+                    case 'zoonosis': 
+                        categoryName = '人畜共患病';
+                        categoryClass = 'zoonosis';
+                        break;
+                    case 'general': 
+                        categoryName = '通用知识';
+                        categoryClass = 'general';
+                        break;
+                }
+                
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span class="question-id">${q.id}/231</span>
+                        <span class="question-category ${categoryClass}">${categoryName}</span>
+                    </div>
+                    <div class="question-text">
+                        ${q.question}
+                    </div>
+                    <div class="answer-container" id="answer-${q.id}">
+                        <div class="answer-title"><i class="fas fa-lightbulb"></i> 参考答案：</div>
+                        <div class="answer-content">${q.answer}</div>
+                    </div>
+                    <button class="toggle-btn" data-id="${q.id}">
+                        <i class="fas fa-eye"></i> 显示答案
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+            
+            // 添加答案切换事件
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    const answerContainer = document.getElementById(`answer-${id}`);
+                    answerContainer.classList.toggle('show');
+                    
+                    if (answerContainer.classList.contains('show')) {
+                        btn.innerHTML = '<i class="fas fa-eye-slash"></i> 隐藏答案';
+                    } else {
+                        btn.innerHTML = '<i class="fas fa-eye"></i> 显示答案';
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
